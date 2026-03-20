@@ -1,3 +1,4 @@
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../../balance/domain/entities/balance_config.dart';
@@ -169,30 +170,12 @@ class BalancedRichText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        if (constraints.maxWidth == double.infinity) {
-          return _buildRichText();
-        }
-
-        final config = BalanceConfig(
-          ratio: ratio,
-          algorithmType: algorithmType,
-          preventOrphan: preventOrphan,
-        );
-
-        final calculator = CalculateRichBalance();
-        final result = calculator(
-          span: _processedText,
-          maxWidth: constraints.maxWidth,
-          config: config,
-        );
-
-        return SizedBox(
-          width: result.optimalWidth,
-          child: _buildRichText(),
-        );
-      },
+    return _BalancedRichTextLayout(
+      span: _processedText,
+      ratio: ratio,
+      algorithmType: algorithmType,
+      preventOrphan: preventOrphan,
+      child: _buildRichText(),
     );
   }
 
@@ -210,5 +193,182 @@ class BalancedRichText extends StatelessWidget {
       textHeightBehavior: textHeightBehavior,
       textScaler: textScaler,
     );
+  }
+}
+
+/// Internal widget that handles balanced rich text layout with dry layout support.
+class _BalancedRichTextLayout extends SingleChildRenderObjectWidget {
+  final InlineSpan span;
+  final double ratio;
+  final BalanceAlgorithmType algorithmType;
+  final bool preventOrphan;
+
+  const _BalancedRichTextLayout({
+    required this.span,
+    required this.ratio,
+    required this.algorithmType,
+    required this.preventOrphan,
+    required Widget child,
+  }) : super(child: child);
+
+  @override
+  RenderObject createRenderObject(BuildContext context) {
+    return _RenderBalancedRichText(
+      span: span,
+      ratio: ratio,
+      algorithmType: algorithmType,
+      preventOrphan: preventOrphan,
+    );
+  }
+
+  @override
+  void updateRenderObject(
+      BuildContext context, _RenderBalancedRichText renderObject) {
+    renderObject
+      ..span = span
+      ..ratio = ratio
+      ..algorithmType = algorithmType
+      ..preventOrphan = preventOrphan;
+  }
+}
+
+/// Custom RenderBox that supports computeDryLayout for balanced rich text.
+class _RenderBalancedRichText extends RenderProxyBox {
+  _RenderBalancedRichText({
+    required InlineSpan span,
+    required double ratio,
+    required BalanceAlgorithmType algorithmType,
+    required bool preventOrphan,
+  })  : _span = span,
+        _ratio = ratio,
+        _algorithmType = algorithmType,
+        _preventOrphan = preventOrphan;
+
+  InlineSpan _span;
+  set span(InlineSpan value) {
+    if (_span == value) return;
+    _span = value;
+    _cachedOptimalWidth = null;
+    markNeedsLayout();
+  }
+
+  double _ratio;
+  set ratio(double value) {
+    if (_ratio == value) return;
+    _ratio = value;
+    _cachedOptimalWidth = null;
+    markNeedsLayout();
+  }
+
+  BalanceAlgorithmType _algorithmType;
+  set algorithmType(BalanceAlgorithmType value) {
+    if (_algorithmType == value) return;
+    _algorithmType = value;
+    _cachedOptimalWidth = null;
+    markNeedsLayout();
+  }
+
+  bool _preventOrphan;
+  set preventOrphan(bool value) {
+    if (_preventOrphan == value) return;
+    _preventOrphan = value;
+    _cachedOptimalWidth = null;
+    markNeedsLayout();
+  }
+
+  double? _cachedOptimalWidth;
+  double? _cachedMaxWidth;
+
+  double _calculateOptimalWidth(double maxWidth) {
+    if (_cachedOptimalWidth != null && _cachedMaxWidth == maxWidth) {
+      return _cachedOptimalWidth!;
+    }
+
+    if (maxWidth == double.infinity) {
+      return maxWidth;
+    }
+
+    final config = BalanceConfig(
+      ratio: _ratio,
+      algorithmType: _algorithmType,
+      preventOrphan: _preventOrphan,
+    );
+
+    final calculator = CalculateRichBalance();
+    final result = calculator(
+      span: _span,
+      maxWidth: maxWidth,
+      config: config,
+    );
+
+    _cachedOptimalWidth = result.optimalWidth;
+    _cachedMaxWidth = maxWidth;
+    return result.optimalWidth;
+  }
+
+  @override
+  void performLayout() {
+    final maxWidth = constraints.maxWidth;
+    final optimalWidth = _calculateOptimalWidth(maxWidth);
+
+    // Respect parent's minWidth constraint
+    final effectiveWidth = optimalWidth.clamp(
+      constraints.minWidth,
+      constraints.maxWidth,
+    );
+
+    final childConstraints = BoxConstraints(
+      minWidth: 0,
+      maxWidth: effectiveWidth,
+      minHeight: constraints.minHeight,
+      maxHeight: constraints.maxHeight,
+    );
+
+    child!.layout(childConstraints, parentUsesSize: true);
+    // Ensure size meets parent constraints
+    size = constraints.constrain(child!.size);
+  }
+
+  @override
+  Size computeDryLayout(BoxConstraints constraints) {
+    final maxWidth = constraints.maxWidth;
+    final optimalWidth = _calculateOptimalWidth(maxWidth);
+
+    final effectiveWidth = optimalWidth.clamp(
+      constraints.minWidth,
+      constraints.maxWidth,
+    );
+
+    final childConstraints = BoxConstraints(
+      minWidth: 0,
+      maxWidth: effectiveWidth,
+      minHeight: constraints.minHeight,
+      maxHeight: constraints.maxHeight,
+    );
+
+    final childSize = child!.getDryLayout(childConstraints);
+    return constraints.constrain(childSize);
+  }
+
+  @override
+  double computeMinIntrinsicWidth(double height) {
+    return child!.getMinIntrinsicWidth(height);
+  }
+
+  @override
+  double computeMaxIntrinsicWidth(double height) {
+    return child!.getMaxIntrinsicWidth(height);
+  }
+
+  @override
+  double computeMinIntrinsicHeight(double width) {
+    final optimalWidth = _calculateOptimalWidth(width);
+    return child!.getMinIntrinsicHeight(optimalWidth);
+  }
+
+  @override
+  double computeMaxIntrinsicHeight(double width) {
+    final optimalWidth = _calculateOptimalWidth(width);
+    return child!.getMaxIntrinsicHeight(optimalWidth);
   }
 }
