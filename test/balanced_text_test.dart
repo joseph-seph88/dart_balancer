@@ -118,4 +118,86 @@ void main() {
       expect(result.reductionPercent, 20);
     });
   });
+
+  group('Dry Layout Support', () {
+    testWidgets('BalancedText works with IntrinsicWidth', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: IntrinsicWidth(
+                child: BalancedText(
+                  '이것은 IntrinsicWidth 테스트입니다',
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      expect(find.byType(BalancedText), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('BalancedRichText works with IntrinsicWidth', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: IntrinsicWidth(
+                child: BalancedRichText(
+                  const TextSpan(text: 'IntrinsicWidth 테스트'),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      expect(find.byType(BalancedRichText), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('BalancedText works with IntrinsicHeight', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: SizedBox(
+                width: 200,
+                child: IntrinsicHeight(
+                  child: BalancedText(
+                    '이것은 IntrinsicHeight 테스트입니다',
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      expect(find.byType(BalancedText), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('BalancedText works inside Row with IntrinsicWidth', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IntrinsicWidth(
+                  child: BalancedText('테스트 텍스트'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      expect(find.byType(BalancedText), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    });
+  });
 }
