@@ -14,11 +14,15 @@ class RichBalanceResult {
   /// The original TextSpan.
   final InlineSpan span;
 
+  /// Whether orphan was prevented.
+  final bool orphanPrevented;
+
   const RichBalanceResult({
     required this.optimalWidth,
     required this.originalWidth,
     required this.lineCount,
     required this.span,
+    this.orphanPrevented = false,
   });
 
   /// The amount of width reduction applied.

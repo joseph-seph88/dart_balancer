@@ -26,3 +26,6 @@ export 'src/features/balance/presentation/widgets/balanced_text.dart';
 export 'src/features/rich_balance/domain/entities/rich_balance_result.dart';
 export 'src/features/rich_balance/domain/usecases/calculate_rich_balance.dart';
 export 'src/features/rich_balance/presentation/widgets/balanced_rich_text.dart';
+
+// Features - Safe Balance
+export 'src/features/safe_balance/presentation/widgets/safe_balanced_text.dart';
