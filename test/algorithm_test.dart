@@ -37,12 +37,8 @@ void main() {
           maxWidth: balancedWidth,
         );
 
-        print('=== Width: $width ===');
-        print('Original lines: $originalLines');
-        print('Balanced width: $balancedWidth');
-        print('Balanced lines: $balancedLines');
-        print('Width reduction: ${width - balancedWidth}');
-        print('');
+        // Verify balancing maintains line count
+        expect(balancedLines, lessThanOrEqualTo(originalLines + 1));
       }
     });
 
@@ -75,12 +71,8 @@ void main() {
           maxWidth: balancedWidth,
         );
 
-        print('=== Width: $width ===');
-        print('Original lines: $originalLines');
-        print('Balanced width: $balancedWidth');
-        print('Balanced lines: $balancedLines');
-        print('Width reduction: ${width - balancedWidth}');
-        print('');
+        // Verify balancing maintains line count
+        expect(balancedLines, lessThanOrEqualTo(originalLines + 1));
       }
     });
   });

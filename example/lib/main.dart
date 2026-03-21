@@ -151,6 +151,43 @@ class _DemoPageState extends State<DemoPage> {
             ),
             const SizedBox(height: 32),
 
+            // SafeBalancedText example
+            const Text(
+              'SafeBalancedText (auto-sizing + balancing):',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            Container(
+              color: Colors.red.shade50,
+              padding: const EdgeInsets.all(16),
+              width: 200,
+              child: const SafeBalancedText(
+                'This is a very long headline that will shrink to fit within the container while staying balanced',
+                style: TextStyle(fontSize: 24),
+                minFontSize: 12,
+                maxLines: 3,
+                maxTextScaleFactor: 1.3,
+              ),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Same text without SafeBalancedText:',
+              style: TextStyle(fontSize: 12, color: Colors.grey),
+            ),
+            const SizedBox(height: 4),
+            Container(
+              color: Colors.grey.shade200,
+              padding: const EdgeInsets.all(16),
+              width: 200,
+              child: const Text(
+                'This is a very long headline that will shrink to fit within the container while staying balanced',
+                style: TextStyle(fontSize: 24),
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const SizedBox(height: 32),
+
             // Algorithm comparison
             const Text(
               'Greedy vs Optimal Algorithm:',

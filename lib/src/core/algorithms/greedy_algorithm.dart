@@ -37,6 +37,9 @@ class GreedyAlgorithm implements BalanceAlgorithm {
     final minWidth = measurer.getMinWordWidth(text: text, style: style);
     final step = (maxWidth - minWidth) * 0.05; // 5% steps
 
+    // Prevent infinite loop when step is too small
+    if (step < 1.0) return maxWidth;
+
     double currentWidth = maxWidth;
     double bestWidth = maxWidth;
 

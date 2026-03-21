@@ -16,25 +16,24 @@ class WordBreakUtils {
     if (text.isEmpty) return text;
 
     final buffer = StringBuffer();
-    final words = text.split(' ');
 
-    for (int i = 0; i < words.length; i++) {
-      final word = words[i];
+    // Process character by character to preserve original spacing
+    bool lastWasSpace = false;
+    for (int i = 0; i < text.length; i++) {
+      final char = text[i];
 
-      if (word.isNotEmpty) {
-        // Insert word joiner between each character in the word
-        for (int j = 0; j < word.length; j++) {
-          buffer.write(word[j]);
-          // Add word joiner after each character except the last
-          if (j < word.length - 1) {
-            buffer.write(wordJoiner);
-          }
-        }
-      }
-
-      // Add space between words (except after the last word)
-      if (i < words.length - 1) {
+      if (char == ' ') {
         buffer.write(' ');
+        lastWasSpace = true;
+      } else {
+        // Add word joiner before this character if:
+        // - it's not the first character
+        // - previous character was not a space
+        if (i > 0 && !lastWasSpace) {
+          buffer.write(wordJoiner);
+        }
+        buffer.write(char);
+        lastWasSpace = false;
       }
     }
 
