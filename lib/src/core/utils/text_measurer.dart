@@ -107,7 +107,8 @@ class TextMeasurer {
     );
 
     final lastLineText = text.substring(lastLineStart.offset).trim();
-    final wordCount = lastLineText.split(RegExp(r'\s+')).where((w) => w.isNotEmpty).length;
+    final wordCount =
+        lastLineText.split(RegExp(r'\s+')).where((w) => w.isNotEmpty).length;
 
     textPainter.dispose();
     return wordCount == 1;
@@ -143,7 +144,8 @@ class TextMeasurer {
     }
 
     final lastLineText = plainText.substring(lastLineStart.offset).trim();
-    final wordCount = lastLineText.split(RegExp(r'\s+')).where((w) => w.isNotEmpty).length;
+    final wordCount =
+        lastLineText.split(RegExp(r'\s+')).where((w) => w.isNotEmpty).length;
 
     textPainter.dispose();
     return wordCount == 1;

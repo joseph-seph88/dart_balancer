@@ -58,14 +58,14 @@ class WordBreakUtils {
   /// Checks if text contains CJK (Chinese, Japanese, Korean) characters.
   static bool containsCJK(String text) {
     // CJK Unicode ranges
-    final cjkRegex = RegExp(
-      r'[\u4E00-\u9FFF'  // CJK Unified Ideographs (Chinese)
-      r'\u3040-\u309F'   // Hiragana (Japanese)
-      r'\u30A0-\u30FF'   // Katakana (Japanese)
-      r'\uAC00-\uD7AF'   // Hangul Syllables (Korean)
-      r'\u1100-\u11FF'   // Hangul Jamo
-      r'\u3130-\u318F]'  // Hangul Compatibility Jamo
-    );
+    final cjkRegex =
+        RegExp(r'[\u4E00-\u9FFF' // CJK Unified Ideographs (Chinese)
+            r'\u3040-\u309F' // Hiragana (Japanese)
+            r'\u30A0-\u30FF' // Katakana (Japanese)
+            r'\uAC00-\uD7AF' // Hangul Syllables (Korean)
+            r'\u1100-\u11FF' // Hangul Jamo
+            r'\u3130-\u318F]' // Hangul Compatibility Jamo
+            );
     return cjkRegex.hasMatch(text);
   }
 }

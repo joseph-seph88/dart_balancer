@@ -66,7 +66,8 @@ class CalculateRichBalance {
       );
 
       if (hasOrphan) {
-        final minWidth = _measurer.getMinWordWidth(text: plainText, style: null);
+        final minWidth =
+            _measurer.getMinWordWidth(text: plainText, style: null);
         double testWidth = optimalWidth;
         const step = 5.0;
 

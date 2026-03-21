@@ -43,7 +43,8 @@ void main() {
     });
 
     testWidgets('영어 텍스트 밸런싱 테스트', (tester) async {
-      const testText = 'The quick brown fox jumps over the lazy dog near the river';
+      const testText =
+          'The quick brown fox jumps over the lazy dog near the river';
       const style = TextStyle(fontSize: 20);
 
       final widths = [400.0, 350.0, 300.0, 250.0];
