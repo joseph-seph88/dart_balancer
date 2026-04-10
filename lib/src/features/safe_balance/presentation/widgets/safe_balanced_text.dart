@@ -54,8 +54,8 @@ class SafeBalancedText extends StatelessWidget {
   /// Whether to keep words together (no mid-word breaks).
   final bool keepAll;
 
-  /// Text alignment.
-  final TextAlign? textAlign;
+  /// Text alignment. Defaults to center.
+  final TextAlign textAlign;
 
   /// Text overflow behavior when even minFontSize doesn't fit.
   final TextOverflow overflow;
@@ -84,7 +84,7 @@ class SafeBalancedText extends StatelessWidget {
     this.algorithmType = BalanceAlgorithmType.greedy,
     this.preventOrphan = true,
     this.keepAll = true,
-    this.textAlign,
+    this.textAlign = TextAlign.center,
     this.overflow = TextOverflow.ellipsis,
     this.textDirection,
     this.locale,
@@ -134,7 +134,7 @@ class _SafeBalancedTextLayout extends StatefulWidget {
   final double ratio;
   final BalanceAlgorithmType algorithmType;
   final bool preventOrphan;
-  final TextAlign? textAlign;
+  final TextAlign textAlign;
   final TextOverflow overflow;
   final TextDirection? textDirection;
   final Locale? locale;

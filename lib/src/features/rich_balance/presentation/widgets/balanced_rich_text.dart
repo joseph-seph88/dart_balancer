@@ -42,7 +42,7 @@ class BalancedRichText extends StatelessWidget {
   /// Recommended for Korean/CJK text.
   final bool keepAll;
 
-  /// Text alignment.
+  /// Text alignment. Defaults to center.
   final TextAlign textAlign;
 
   /// Text direction.
@@ -79,7 +79,7 @@ class BalancedRichText extends StatelessWidget {
     this.algorithmType = BalanceAlgorithmType.greedy,
     this.preventOrphan = true,
     this.keepAll = true,
-    this.textAlign = TextAlign.start,
+    this.textAlign = TextAlign.center,
     this.textDirection,
     this.softWrap = true,
     this.overflow = TextOverflow.clip,
@@ -99,7 +99,7 @@ class BalancedRichText extends StatelessWidget {
     BalanceAlgorithmType algorithmType = BalanceAlgorithmType.greedy,
     bool preventOrphan = true,
     bool keepAll = true,
-    TextAlign textAlign = TextAlign.start,
+    TextAlign textAlign = TextAlign.center,
     TextDirection? textDirection,
     bool softWrap = true,
     TextOverflow overflow = TextOverflow.clip,

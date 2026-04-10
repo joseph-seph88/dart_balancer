@@ -1,6 +1,6 @@
 name: dart_balancer
 description: Text balancing widget with ratio control, RichText support, and Korean/CJK keepAll. Inspired by react-wrap-balancer.
-version: 0.2.0
+version: 0.3.0
 repository: https://github.com/joseph-seph88/dart_balancer
 
 environment:
