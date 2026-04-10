@@ -44,8 +44,8 @@ class BalancedText extends StatelessWidget {
   /// Recommended for Korean/CJK text.
   final bool keepAll;
 
-  /// Text alignment.
-  final TextAlign? textAlign;
+  /// Text alignment. Defaults to center.
+  final TextAlign textAlign;
 
   /// Maximum lines to display.
   final int? maxLines;
@@ -76,7 +76,7 @@ class BalancedText extends StatelessWidget {
     this.algorithmType = BalanceAlgorithmType.greedy,
     this.preventOrphan = true,
     this.keepAll = true,
-    this.textAlign,
+    this.textAlign = TextAlign.center,
     this.maxLines,
     this.overflow,
     this.textDirection,
