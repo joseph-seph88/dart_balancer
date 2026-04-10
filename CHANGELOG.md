@@ -1,3 +1,14 @@
+## 0.3.0
+
+### Improvements
+- Set default `textAlign` to `center` for all widgets (BalancedText, SafeBalancedText, BalancedRichText)
+- Ensure consistent alignment behavior across all text balancing widgets
+
+### Documentation
+- Add comprehensive widget comparison guide in README
+- Add practical usage examples for each widget
+- Clarify which widget to use for different scenarios
+
 ## 0.2.0
 
 ### New Features
