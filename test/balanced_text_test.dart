@@ -31,7 +31,8 @@ void main() {
         ),
       );
 
-      expect(find.text('This is a long text that should be balanced'), findsOneWidget);
+      expect(find.text('This is a long text that should be balanced'),
+          findsOneWidget);
     });
 
     testWidgets('works with different algorithms', (tester) async {
@@ -180,7 +181,8 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('BalancedText works inside Row with IntrinsicWidth', (tester) async {
+    testWidgets('BalancedText works inside Row with IntrinsicWidth',
+        (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(

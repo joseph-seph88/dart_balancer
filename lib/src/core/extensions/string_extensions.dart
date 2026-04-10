@@ -58,6 +58,7 @@ extension BalancedStringExtension on String {
       maxWidth: maxWidth,
     );
 
-    return linesWithoutLastWord == lineCount - 1 && lastWordWidth < maxWidth * 0.3;
+    return linesWithoutLastWord == lineCount - 1 &&
+        lastWordWidth < maxWidth * 0.3;
   }
 }

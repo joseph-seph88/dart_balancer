@@ -7,10 +7,11 @@ class TextMeasurer {
     required String text,
     required TextStyle? style,
     required double maxWidth,
+    TextDirection textDirection = TextDirection.ltr,
   }) {
     final textPainter = TextPainter(
       text: TextSpan(text: text, style: style),
-      textDirection: TextDirection.ltr,
+      textDirection: textDirection,
       maxLines: null,
     )..layout(maxWidth: maxWidth);
 
@@ -24,6 +25,7 @@ class TextMeasurer {
   double getMinWordWidth({
     required String text,
     required TextStyle? style,
+    TextDirection textDirection = TextDirection.ltr,
   }) {
     final words = text.split(RegExp(r'\s+'));
     double maxWordWidth = 0;
@@ -33,7 +35,7 @@ class TextMeasurer {
 
       final textPainter = TextPainter(
         text: TextSpan(text: word, style: style),
-        textDirection: TextDirection.ltr,
+        textDirection: textDirection,
       )..layout();
 
       if (textPainter.width > maxWordWidth) {
@@ -49,10 +51,11 @@ class TextMeasurer {
   double getIntrinsicWidth({
     required String text,
     required TextStyle? style,
+    TextDirection textDirection = TextDirection.ltr,
   }) {
     final textPainter = TextPainter(
       text: TextSpan(text: text, style: style),
-      textDirection: TextDirection.ltr,
+      textDirection: textDirection,
     )..layout();
 
     final width = textPainter.width;
@@ -65,10 +68,11 @@ class TextMeasurer {
   List<LineMetrics> getLineMetrics({
     required InlineSpan span,
     required double maxWidth,
+    TextDirection textDirection = TextDirection.ltr,
   }) {
     final textPainter = TextPainter(
       text: span,
-      textDirection: TextDirection.ltr,
+      textDirection: textDirection,
       maxLines: null,
     )..layout(maxWidth: maxWidth);
 
@@ -76,5 +80,74 @@ class TextMeasurer {
     textPainter.dispose();
 
     return metrics;
+  }
+
+  /// Checks if last line has only one word (orphan).
+  bool hasOrphan({
+    required String text,
+    required TextStyle? style,
+    required double maxWidth,
+    TextDirection textDirection = TextDirection.ltr,
+  }) {
+    final textPainter = TextPainter(
+      text: TextSpan(text: text, style: style),
+      textDirection: textDirection,
+      maxLines: null,
+    )..layout(maxWidth: maxWidth);
+
+    final lineMetrics = textPainter.computeLineMetrics();
+    if (lineMetrics.length <= 1) {
+      textPainter.dispose();
+      return false;
+    }
+
+    // Get text position at last line start
+    final lastLineStart = textPainter.getPositionForOffset(
+      Offset(0, lineMetrics.last.baseline - lineMetrics.last.ascent + 1),
+    );
+
+    final lastLineText = text.substring(lastLineStart.offset).trim();
+    final wordCount =
+        lastLineText.split(RegExp(r'\s+')).where((w) => w.isNotEmpty).length;
+
+    textPainter.dispose();
+    return wordCount == 1;
+  }
+
+  /// Checks if last line has only one word (orphan) for InlineSpan.
+  bool hasOrphanSpan({
+    required InlineSpan span,
+    required String plainText,
+    required double maxWidth,
+    TextDirection textDirection = TextDirection.ltr,
+  }) {
+    final textPainter = TextPainter(
+      text: span,
+      textDirection: textDirection,
+      maxLines: null,
+    )..layout(maxWidth: maxWidth);
+
+    final lineMetrics = textPainter.computeLineMetrics();
+    if (lineMetrics.length <= 1) {
+      textPainter.dispose();
+      return false;
+    }
+
+    // Get text position at last line start
+    final lastLineStart = textPainter.getPositionForOffset(
+      Offset(0, lineMetrics.last.baseline - lineMetrics.last.ascent + 1),
+    );
+
+    if (lastLineStart.offset >= plainText.length) {
+      textPainter.dispose();
+      return false;
+    }
+
+    final lastLineText = plainText.substring(lastLineStart.offset).trim();
+    final wordCount =
+        lastLineText.split(RegExp(r'\s+')).where((w) => w.isNotEmpty).length;
+
+    textPainter.dispose();
+    return wordCount == 1;
   }
 }

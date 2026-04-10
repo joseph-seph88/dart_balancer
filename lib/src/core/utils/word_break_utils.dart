@@ -16,25 +16,24 @@ class WordBreakUtils {
     if (text.isEmpty) return text;
 
     final buffer = StringBuffer();
-    final words = text.split(' ');
 
-    for (int i = 0; i < words.length; i++) {
-      final word = words[i];
+    // Process character by character to preserve original spacing
+    bool lastWasSpace = false;
+    for (int i = 0; i < text.length; i++) {
+      final char = text[i];
 
-      if (word.isNotEmpty) {
-        // Insert word joiner between each character in the word
-        for (int j = 0; j < word.length; j++) {
-          buffer.write(word[j]);
-          // Add word joiner after each character except the last
-          if (j < word.length - 1) {
-            buffer.write(wordJoiner);
-          }
-        }
-      }
-
-      // Add space between words (except after the last word)
-      if (i < words.length - 1) {
+      if (char == ' ') {
         buffer.write(' ');
+        lastWasSpace = true;
+      } else {
+        // Add word joiner before this character if:
+        // - it's not the first character
+        // - previous character was not a space
+        if (i > 0 && !lastWasSpace) {
+          buffer.write(wordJoiner);
+        }
+        buffer.write(char);
+        lastWasSpace = false;
       }
     }
 
@@ -59,14 +58,14 @@ class WordBreakUtils {
   /// Checks if text contains CJK (Chinese, Japanese, Korean) characters.
   static bool containsCJK(String text) {
     // CJK Unicode ranges
-    final cjkRegex = RegExp(
-      r'[\u4E00-\u9FFF'  // CJK Unified Ideographs (Chinese)
-      r'\u3040-\u309F'   // Hiragana (Japanese)
-      r'\u30A0-\u30FF'   // Katakana (Japanese)
-      r'\uAC00-\uD7AF'   // Hangul Syllables (Korean)
-      r'\u1100-\u11FF'   // Hangul Jamo
-      r'\u3130-\u318F]'  // Hangul Compatibility Jamo
-    );
+    final cjkRegex =
+        RegExp(r'[\u4E00-\u9FFF' // CJK Unified Ideographs (Chinese)
+            r'\u3040-\u309F' // Hiragana (Japanese)
+            r'\u30A0-\u30FF' // Katakana (Japanese)
+            r'\uAC00-\uD7AF' // Hangul Syllables (Korean)
+            r'\u1100-\u11FF' // Hangul Jamo
+            r'\u3130-\u318F]' // Hangul Compatibility Jamo
+            );
     return cjkRegex.hasMatch(text);
   }
 }
